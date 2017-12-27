@@ -1,18 +1,35 @@
 var Hapi = require('hapi');
+var Inert = require('inert');
 
 
 var server = new Hapi.Server();
 
 server.connection({port : 7680});
+server.register([Inert]);
+server.ext('onRequest',function (request,reply) {
+    console.log("request recived ::" +request.path);
+    reply.continue();
 
-server.route({
-    path: '/',
-    method: 'GET',
-    handler: function (request, reply) {
-        reply('Hello World');
-
+})
+server.route(
+    {
+        path: '/alerts',
+        method: 'GET',
+        handler: {
+            file: 'E:/JS/simpleReact/src/server/index.html'
+        },
     }
-});
+   );
+
+server.route(
+    {
+        path: '/bundle.js',
+        method: 'GET',
+        handler: {
+            file: 'E:/JS/simpleReact/bundle.js'
+        }
+    }
+);
 
 server.start(function (err) {
 
